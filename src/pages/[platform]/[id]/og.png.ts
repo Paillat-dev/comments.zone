@@ -5,6 +5,8 @@ import {
   type PlatformKey,
 } from "$lib/platforms";
 import { renderInstagramOg } from "$lib/og/instagram";
+import { renderYoutubeOg } from "$lib/og/youtube";
+import { renderRedditOg } from "$lib/og/reddit";
 
 export const getStaticPaths = getCommentStaticPaths;
 
@@ -13,6 +15,8 @@ const renderers: Record<
   (userSeed: string, content: string) => Promise<Uint8Array>
 > = {
   i: renderInstagramOg,
+  y: renderYoutubeOg,
+  r: renderRedditOg,
 };
 
 export const GET: APIRoute<CommentRouteProps> = async ({ props }) => {

@@ -2,18 +2,37 @@
 @import "@fontsource/roboto/500.css";
 @import "@fontsource/roboto/600.css";
 @import "@fontsource/roboto/700.css";
+@import "@fontsource/dm-sans/400.css";
+@import "@fontsource/dm-sans/500.css";
+@import "@fontsource/dm-sans/600.css";
+@import "@fontsource/dm-sans/700.css";
+@import "@fontsource-variable/reddit-sans/wght.css";
 @import "@fontsource/noto-color-emoji/400.css";
 @import "tailwindcss";
 @theme {
   --color-ig-background: #222328;
   --color-ig-foreground: #f8f9f9;
   --color-ig-muted: #b8b9bd;
+  --color-yt-background: #0f0f0f;
+  --color-yt-foreground: #f1f1f1;
+  --color-yt-muted: #999999;
+  --color-rd-background: #141211;
+  --color-rd-foreground: #f4f3f3;
+  --color-rd-muted: #998f8c;
+  --color-rd-text: rgb(183, 202, 212);
+  --color-rd-muted-dark: #464240;
   --font-sans:
     ui-sans-serif, system-ui, sans-serif, "Noto Color Emoji",
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --font-ig:
     "Roboto", ui-sans-serif, system-ui, sans-serif, "Noto Color Emoji",
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-yt:
+    "Roboto", ui-sans-serif, system-ui, sans-serif, "Noto Color Emoji",
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-rd:
+    "Reddit Sans Variable", ui-sans-serif, system-ui, sans-serif,
+    "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 @layer base {

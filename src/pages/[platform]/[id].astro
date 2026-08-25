@@ -1,22 +1,13 @@
 ---
-import Instagram from "$lib/components/comments/Instagram.astro";
-import {
-  getCommentStaticPaths,
-  type CommentRouteProps,
-  type PlatformKey,
-} from "$lib/platforms";
-
-const components: Record<PlatformKey, typeof Instagram> = {
-  i: Instagram,
-};
+import CommentCard from "$lib/components/comments/CommentCard.astro";
+import { getCommentStaticPaths, type CommentRouteProps } from "$lib/platforms";
 
 type Props = CommentRouteProps;
 
 export const getStaticPaths = getCommentStaticPaths;
 
 const { platform, comment } = Astro.props;
-const Comment = components[platform];
 ---
 
 <meta name="robots" content="noindex" />
-<Comment userSeed={comment.id.toString()} content={comment.content} />
+<CommentCard platform={platform} comment={comment} />

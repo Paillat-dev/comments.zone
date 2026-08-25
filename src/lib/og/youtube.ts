@@ -1,6 +1,6 @@
+import { readFile } from "node:fs/promises";
 import satori from "satori";
 import sharp from "sharp";
-import { Heart } from "lucide-static";
 import { getCommentDisplayData } from "$lib/comments/common";
 import {
   OG_WIDTH,
@@ -15,24 +15,36 @@ import {
 } from "./common";
 
 const COLORS = {
-  background: "#222328",
-  foreground: "#f8f9f9",
-  muted: "#b8b9bd",
+  background: "#0f0f0f",
+  foreground: "#f1f1f1",
+  muted: "#999999",
 };
 
-let heartIconPromise: Promise<OgNode> | undefined;
+let iconsPromise: Promise<{ thumbsUp: OgNode; thumbsDown: OgNode }> | undefined;
 
-function loadHeartIcon(): Promise<OgNode> {
-  heartIconPromise ??= svgIconNode(Heart, COLORS.muted, 44);
-  return heartIconPromise;
+function loadIcons(): Promise<{ thumbsUp: OgNode; thumbsDown: OgNode }> {
+  iconsPromise ??= (async () => {
+    const [up, down] = await Promise.all([
+      readFile("src/lib/assets/yt-thumbs-up.svg", "utf8"),
+      readFile("src/lib/assets/yt-thumbs-down.svg", "utf8"),
+    ]);
+
+    return {
+      thumbsUp: await svgIconNode(up, COLORS.foreground, 44),
+      thumbsDown: await svgIconNode(down, COLORS.foreground, 44),
+    };
+  })();
+  return iconsPromise;
 }
 
-async function renderInstagramOg(
+async function renderYoutubeOg(
   userSeed: string,
   content: string,
 ): Promise<Uint8Array> {
   const { username, avatar, numLikes, weeksAge, segments } =
     getCommentDisplayData(userSeed, content);
+
+  const { thumbsUp, thumbsDown } = await loadIcons();
 
   const card: OgNode = {
     type: "div",
@@ -63,7 +75,7 @@ async function renderInstagramOg(
               display: "flex",
               flexDirection: "column",
               gap: 10,
-              maxWidth: 720,
+              maxWidth: 800,
               color: COLORS.foreground,
               fontSize: 34,
             },
@@ -76,15 +88,15 @@ async function renderInstagramOg(
                     {
                       type: "span",
                       props: {
-                        style: { fontWeight: 600 },
-                        children: username,
+                        style: { fontWeight: 600, letterSpacing: "-0.5px" },
+                        children: `@${username}`,
                       },
                     },
                     {
                       type: "span",
                       props: {
                         style: { color: COLORS.muted },
-                        children: `${weeksAge}w`,
+                        children: `${weeksAge} weeks ago`,
                       },
                     },
                   ],
@@ -108,28 +120,51 @@ async function renderInstagramOg(
               {
                 type: "div",
                 props: {
-                  style: { fontWeight: 600, color: COLORS.muted },
-                  children: "Reply",
+                  style: {
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 28,
+                    marginTop: 14,
+                  },
+                  children: [
+                    {
+                      type: "div",
+                      props: {
+                        style: {
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 14,
+                        },
+                        children: [
+                          thumbsUp,
+                          {
+                            type: "span",
+                            props: {
+                              style: {
+                                fontSize: 30,
+                                letterSpacing: "-0.5px",
+                                color: COLORS.muted,
+                              },
+                              children: numLikes.toUpperCase(),
+                            },
+                          },
+                          thumbsDown,
+                        ],
+                      },
+                    },
+                    {
+                      type: "span",
+                      props: {
+                        style: { fontWeight: 600, letterSpacing: "-0.5px" },
+                        children: "Reply",
+                      },
+                    },
+                  ],
                 },
               },
             ],
-          },
-        },
-        {
-          type: "div",
-          props: {
-            style: {
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 6,
-              marginLeft: 48,
-              marginTop: 16,
-              color: COLORS.muted,
-              fontSize: 30,
-              fontWeight: 600,
-            },
-            children: [await loadHeartIcon(), numLikes],
           },
         },
       ],
@@ -161,4 +196,4 @@ async function renderInstagramOg(
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
-export { renderInstagramOg };
+export { renderYoutubeOg };

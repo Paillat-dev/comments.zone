@@ -1,0 +1,22 @@
+---
+import Instagram from "./Instagram.astro";
+import Youtube from "./Youtube.astro";
+import Reddit from "./Reddit.astro";
+import type { CommentData, PlatformKey } from "$lib/platforms";
+
+const components: Record<PlatformKey, typeof Instagram> = {
+  i: Instagram,
+  y: Youtube,
+  r: Reddit,
+};
+
+interface Props {
+  platform: PlatformKey;
+  comment: CommentData;
+}
+
+const { platform, comment } = Astro.props;
+const Comment = components[platform];
+---
+
+<Comment userSeed={comment.id.toString()} content={comment.content} />

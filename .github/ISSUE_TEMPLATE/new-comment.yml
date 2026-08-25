@@ -29,8 +29,7 @@ body:
     attributes:
       label: Platform
       description: >-
-        Where the comment was found. YouTube and Reddit are not implemented
-        on the site yet, but proposals for them are welcome.
+        Where the comment was found.
       options:
         - Instagram
         - YouTube

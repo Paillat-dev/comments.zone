@@ -1,33 +1,11 @@
 ---
 import Layout from "$lib/components/Layout.astro";
-import { commentKeys } from "$lib/comments/instagram.ts";
+import RandomComment from "$lib/components/ui/RandomComment.astro";
+import { getAllCommentEntries } from "$lib/platforms";
+
+const entries = getAllCommentEntries();
 ---
 
-<script define:vars={{ commentKeys }} is:inline>
-  void (async () => {
-    const index = Math.floor(Math.random() * commentKeys.length);
-    const id = commentKeys[index];
-
-    const response = await fetch(`/i/${id}/`);
-    const html = await response.text();
-
-    const target = document.querySelector("#random-card");
-
-    if (target !== null) {
-      target.innerHTML = html;
-    }
-
-    const permalink = document.querySelector("#permalink");
-
-    if (permalink !== null) {
-      permalink.href = `/i/${id}/display`;
-      permalink.hidden = false;
-    }
-  })();
-</script>
 <Layout title="comments.zone" description="">
-  <div class="flex flex-col gap-y-4">
-    <div id="random-card"></div>
-    <a id="permalink" href="/" hidden>Permalink</a>
-  </div>
+  <RandomComment entries={entries} />
 </Layout>

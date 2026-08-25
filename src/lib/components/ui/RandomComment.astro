@@ -1,0 +1,35 @@
+---
+import type { PlatformKey } from "$lib/platforms";
+
+interface Props {
+  entries: [PlatformKey, number][];
+}
+
+const { entries } = Astro.props;
+---
+
+<script define:vars={{ entries }} is:inline>
+  void (async () => {
+    const [platform, id] = entries[Math.floor(Math.random() * entries.length)];
+
+    const response = await fetch(`/${platform}/${id}/`);
+    const html = await response.text();
+
+    const target = document.querySelector("#random-card");
+
+    if (target !== null) {
+      target.innerHTML = html;
+    }
+
+    const permalink = document.querySelector("#permalink");
+
+    if (permalink !== null) {
+      permalink.href = `/${platform}/${id}/display`;
+      permalink.hidden = false;
+    }
+  })();
+</script>
+<div class="flex flex-col gap-y-4">
+  <div id="random-card"></div>
+  <a id="permalink" href="/" hidden>Permalink</a>
+</div>

@@ -1,0 +1,56 @@
+---
+import { getCommentDisplayData } from "$lib/comments/common";
+import { ArrowBigUp, ArrowBigDown } from "@lucide/astro";
+import { twMerge } from "tailwind-merge";
+
+interface Props {
+  userSeed: string;
+  content: string;
+  class?: string;
+}
+
+const { userSeed, content, class: className } = Astro.props;
+
+const { username, avatar, numLikes, weeksAge, segments } =
+  getCommentDisplayData(userSeed, content);
+---
+
+<article
+  class={twMerge(
+    "flex max-w-5xl flex-row bg-rd-background p-6 md:p-16 font-rd text-base text-rd-foreground md:text-xl",
+    className,
+  )}
+>
+  <img
+    src={avatar.toDataUri()}
+    alt={`Avatar for user ${userSeed}`}
+    class="mr-0.5 aspect-square h-8 w-8 rounded-full md:h-12 md:w-12"
+  />
+  <div class="flex flex-col">
+    <div class="mt-3 mb-3 ml-0.5 flex flex-row gap-1 text-sm md:text-lg">
+      <span class="font-semibold">{username}</span><span class="text-rd-muted"
+        >•</span
+      ><span class="text-rd-muted">{Math.floor(weeksAge / 4)}mo ago</span>
+    </div>
+    <div class="mt-3 -ml-1 text-rd-text">
+      {
+        segments.map((segment) =>
+          segment.type === "mention" ? (
+            <span class="text-blue-500">@{segment.username}</span>
+          ) : (
+            segment.value
+          ),
+        )
+      }
+    </div>
+    <div class="mx-2 mt-2 flex flex-row gap-4">
+      <div class="flex flex-row gap-2 text-rd-text">
+        <ArrowBigUp class="h-6 w-6" />
+        <span
+          class="align-middle text-sm font-semibold tracking-tight text-rd-text md:text-lg"
+          >{numLikes.replace("k", "")}</span
+        ><ArrowBigDown class="h-6 w-6" />
+      </div>
+    </div>
+  </div>
+</article>

@@ -1,4 +1,4 @@
-import rawCommentsArray from "$src/comments/instagram.json" with { type: "json" };
+import rawCommentsArray from "$src/comments/youtube.json" with { type: "json" };
 import { buildCommentsArray } from "./common";
 
 const commentsArray = buildCommentsArray(rawCommentsArray);

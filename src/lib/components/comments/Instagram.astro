@@ -1,5 +1,5 @@
 ---
-import { getCommentDisplayData } from "$lib/comments/instagram";
+import { getCommentDisplayData } from "$lib/comments/common";
 import { Heart } from "@lucide/astro";
 import { twMerge } from "tailwind-merge";
 
@@ -16,16 +16,17 @@ const { username, avatar, numLikes, weeksAge, segments } =
 ---
 
 <article
-  class={twMerge("flex max-w-5xl flex-row bg-ig-background p-16", className)}
+  class={twMerge(
+    "flex max-w-5xl flex-row bg-ig-background p-6 md:p-16 font-ig  text-base text-ig-foreground md:text-xl",
+    className,
+  )}
 >
   <img
     src={avatar.toDataUri()}
     alt={`Avatar for user ${userSeed}`}
-    class="mr-4 aspect-square h-16 w-16 rounded-full bg-ig-muted"
+    class="mr-4 aspect-square h-12 w-12 rounded-full bg-ig-muted md:h-16 md:w-16"
   />
-  <div
-    class="mr-10 ml-4 flex flex-col gap-1 font-ig text-base text-ig-foreground md:text-xl"
-  >
+  <div class="mr-6 ml-4 flex flex-col gap-1 md:mr-10">
     <div class="flex flex-row gap-2">
       <span class="font-semibold">{username}</span><span
         class="font-medium text-ig-muted">{weeksAge}w</span
@@ -44,7 +45,9 @@ const { username, avatar, numLikes, weeksAge, segments } =
     </div>
     <div class="font-semibold text-ig-muted">Reply</div>
   </div>
-  <div class="my-5 ml-10 flex flex-col gap-1 font-semibold text-ig-muted">
+  <div
+    class="my-5 ml-6 flex flex-col gap-1 font-semibold text-ig-muted md:ml-10"
+  >
     <Heart class="mx-auto" />
     <span>{numLikes}</span>
   </div>

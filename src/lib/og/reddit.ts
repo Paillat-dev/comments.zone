@@ -1,12 +1,12 @@
 import satori from "satori";
 import sharp from "sharp";
-import { Heart } from "lucide-static";
+import { ArrowBigUp, ArrowBigDown } from "lucide-static";
 import { getCommentDisplayData } from "$lib/comments/common";
 import {
   OG_WIDTH,
   OG_HEIGHT,
   MENTION_COLOR,
-  loadRobotoFonts,
+  loadRedditSansFonts,
   svgIconNode,
   buildContentNodes,
   avatarImageNode,
@@ -15,24 +15,31 @@ import {
 } from "./common";
 
 const COLORS = {
-  background: "#222328",
-  foreground: "#f8f9f9",
-  muted: "#b8b9bd",
+  background: "#141211",
+  foreground: "#f4f3f3",
+  muted: "#998f8c",
+  text: "rgb(183, 202, 212)",
 };
 
-let heartIconPromise: Promise<OgNode> | undefined;
+let iconsPromise: Promise<{ arrowUp: OgNode; arrowDown: OgNode }> | undefined;
 
-function loadHeartIcon(): Promise<OgNode> {
-  heartIconPromise ??= svgIconNode(Heart, COLORS.muted, 44);
-  return heartIconPromise;
+function loadIcons(): Promise<{ arrowUp: OgNode; arrowDown: OgNode }> {
+  iconsPromise ??= (async () => ({
+    arrowUp: await svgIconNode(ArrowBigUp, COLORS.text, 44),
+    arrowDown: await svgIconNode(ArrowBigDown, COLORS.text, 44),
+  }))();
+  return iconsPromise;
 }
 
-async function renderInstagramOg(
+async function renderRedditOg(
   userSeed: string,
   content: string,
 ): Promise<Uint8Array> {
   const { username, avatar, numLikes, weeksAge, segments } =
     getCommentDisplayData(userSeed, content);
+
+  const monthsAge = Math.floor(weeksAge / 4);
+  const { arrowUp, arrowDown } = await loadIcons();
 
   const card: OgNode = {
     type: "div",
@@ -44,16 +51,14 @@ async function renderInstagramOg(
         maxWidth: 1080,
         padding: 64,
         backgroundColor: COLORS.background,
-        fontFamily: "Roboto",
+        fontFamily: "Reddit Sans",
       },
       children: [
         {
           type: "div",
           props: {
-            style: { display: "flex", marginRight: 32 },
-            children: [
-              await avatarImageNode(avatar.toString(), 110, COLORS.muted),
-            ],
+            style: { display: "flex", marginRight: 14 },
+            children: [await avatarImageNode(avatar.toString(), 110)],
           },
         },
         {
@@ -62,8 +67,7 @@ async function renderInstagramOg(
             style: {
               display: "flex",
               flexDirection: "column",
-              gap: 10,
-              maxWidth: 720,
+              maxWidth: 820,
               color: COLORS.foreground,
               fontSize: 34,
             },
@@ -71,7 +75,13 @@ async function renderInstagramOg(
               {
                 type: "div",
                 props: {
-                  style: { display: "flex", flexDirection: "row", gap: 14 },
+                  style: {
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 7,
+                    marginTop: 20,
+                    fontSize: 30,
+                  },
                   children: [
                     {
                       type: "span",
@@ -84,7 +94,14 @@ async function renderInstagramOg(
                       type: "span",
                       props: {
                         style: { color: COLORS.muted },
-                        children: `${weeksAge}w`,
+                        children: "•",
+                      },
+                    },
+                    {
+                      type: "span",
+                      props: {
+                        style: { color: COLORS.muted },
+                        children: `${monthsAge}mo ago`,
                       },
                     },
                   ],
@@ -98,9 +115,10 @@ async function renderInstagramOg(
                     flexWrap: "wrap",
                     columnGap: 9,
                     rowGap: 6,
+                    marginTop: 20,
                   },
                   children: buildContentNodes(segments, {
-                    text: COLORS.foreground,
+                    text: COLORS.text,
                     mention: MENTION_COLOR,
                   }),
                 },
@@ -108,28 +126,32 @@ async function renderInstagramOg(
               {
                 type: "div",
                 props: {
-                  style: { fontWeight: 600, color: COLORS.muted },
-                  children: "Reply",
+                  style: {
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 12,
+                    marginTop: 14,
+                    color: COLORS.text,
+                  },
+                  children: [
+                    arrowUp,
+                    {
+                      type: "span",
+                      props: {
+                        style: {
+                          fontSize: 30,
+                          fontWeight: 600,
+                          letterSpacing: "-0.5px",
+                        },
+                        children: numLikes.replace("k", ""),
+                      },
+                    },
+                    arrowDown,
+                  ],
                 },
               },
             ],
-          },
-        },
-        {
-          type: "div",
-          props: {
-            style: {
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 6,
-              marginLeft: 48,
-              marginTop: 16,
-              color: COLORS.muted,
-              fontSize: 30,
-              fontWeight: 600,
-            },
-            children: [await loadHeartIcon(), numLikes],
           },
         },
       ],
@@ -154,11 +176,11 @@ async function renderInstagramOg(
   const svg = await satori(scene as Parameters<typeof satori>[0], {
     width: OG_WIDTH,
     height: OG_HEIGHT,
-    fonts: await loadRobotoFonts(),
+    fonts: await loadRedditSansFonts(),
     graphemeImages: await getGraphemeImages(`${username} ${content}`),
   });
 
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
-export { renderInstagramOg };
+export { renderRedditOg };

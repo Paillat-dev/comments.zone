@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@fontsource-variable/reddit-sans':
+        specifier: ^5.3.0
+        version: 5.3.0
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.10
@@ -23,9 +27,15 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.9.1(jiti@2.7.0))
+      '@fontsource/dm-sans':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fontsource/noto-color-emoji':
         specifier: ^5.3.1
         version: 5.3.1
+      '@fontsource/reddit-sans':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fontsource/roboto':
         specifier: ^5.3.0
         version: 5.3.0
@@ -531,8 +541,17 @@ packages:
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
+  '@fontsource-variable/reddit-sans@5.3.0':
+    resolution: {integrity: sha512-naTNvstQ0DWDc05RhlLncHLavIYcSwQHQtb6y2CezNxHtlRAQ7+dVTcfHhHUPc409PJdPOewAhdevlsV78YOXg==}
+
+  '@fontsource/dm-sans@5.3.0':
+    resolution: {integrity: sha512-lYJtMXXO28q1z+yz+z8XKd0s4hXaa9QdkETzkyD760sidCv5heI86weYA0sx0Nc4pAMAQTUuyf4gO44cYKKS9g==}
+
   '@fontsource/noto-color-emoji@5.3.1':
     resolution: {integrity: sha512-g7gLb7aznnC50pkW78d7UnXiQcmVMQUpEXXOT4rNK6N3l90Rh7KV6Lp4MzfaHijVajA3kjy0aX9N1pvvj+Cprg==}
+
+  '@fontsource/reddit-sans@5.3.0':
+    resolution: {integrity: sha512-SdA8nHMxMVs8sGeVWQ4qw2Gt/JPYISj7GzseSfVq2ECpl3GyYLgBRBftzeHlP06cV7OZRjJraUCggXteVlQJgg==}
 
   '@fontsource/roboto@5.3.0':
     resolution: {integrity: sha512-BapRJOWYP+LZ21zp+wBQjfpPYKRoxc4LspJ/RLuI+HSMBD5u/X4O+ESDrSvEqDSy0rAl7GwBJ+09mdc16cVQ1Q==}
@@ -3122,7 +3141,13 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
+  '@fontsource-variable/reddit-sans@5.3.0': {}
+
+  '@fontsource/dm-sans@5.3.0': {}
+
   '@fontsource/noto-color-emoji@5.3.1': {}
+
+  '@fontsource/reddit-sans@5.3.0': {}
 
   '@fontsource/roboto@5.3.0': {}
 

@@ -1,0 +1,56 @@
+---
+import { getCommentDisplayData } from "$lib/comments/common";
+import { twMerge } from "tailwind-merge";
+import ThumbsUp from "$lib/assets/yt-thumbs-up.svg";
+import ThumbsDown from "$lib/assets/yt-thumbs-down.svg";
+
+interface Props {
+  userSeed: string;
+  content: string;
+  class?: string;
+}
+
+const { userSeed, content, class: className } = Astro.props;
+
+const { username, avatar, numLikes, weeksAge, segments } =
+  getCommentDisplayData(userSeed, content);
+---
+
+<article
+  class={twMerge(
+    "flex max-w-5xl flex-row bg-yt-background p-6 md:p-16 font-yt  text-base text-yt-foreground md:text-xl",
+    className,
+  )}
+>
+  <img
+    src={avatar.toDataUri()}
+    alt={`Avatar for user ${userSeed}`}
+    class="mr-4 aspect-square h-12 w-12 rounded-full bg-yt-muted md:h-16 md:w-16"
+  />
+  <div class="mr-10 ml-4 flex flex-col gap-1">
+    <div class="flex flex-row gap-2">
+      <span class="font-semibold tracking-tight">@{username}</span><span
+        class="font-normal text-yt-muted">{weeksAge} weeks ago</span
+      >
+    </div>
+    <div class="font-normal">
+      {
+        segments.map((segment) =>
+          segment.type === "mention" ? (
+            <span class="text-blue-500">@{segment.username}</span>
+          ) : (
+            segment.value
+          ),
+        )
+      }
+    </div>
+    <div class="mt-2 flex flex-row gap-4 text-yt-foreground">
+      <div class="flex flex-row gap-2">
+        <ThumbsUp class="h-6 w-6" />
+        <span class="text-sm tracking-tight text-yt-muted md:text-lg"
+          >{numLikes.toUpperCase()}</span
+        ><ThumbsDown class="h-6 w-6" />
+      </div><span class="font-semibold tracking-tight">Reply</span>
+    </div>
+  </div>
+</article>

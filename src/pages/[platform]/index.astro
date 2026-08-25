@@ -1,0 +1,27 @@
+---
+import Layout from "$lib/components/Layout.astro";
+import RandomComment from "$lib/components/ui/RandomComment.astro";
+import {
+  platforms,
+  getPlatformCommentEntries,
+  type PlatformKey,
+} from "$lib/platforms";
+
+interface Props {
+  platform: PlatformKey;
+}
+
+export function getStaticPaths() {
+  return Object.keys(platforms).map((key) => ({
+    params: { platform: key },
+    props: { platform: key as PlatformKey },
+  }));
+}
+
+const { platform } = Astro.props;
+const entries = getPlatformCommentEntries(platform);
+---
+
+<Layout title={`comments.zone | ${platforms[platform].name}`}>
+  <RandomComment entries={entries} />
+</Layout>
