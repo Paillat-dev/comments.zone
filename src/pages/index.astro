@@ -1,17 +1,26 @@
 ---
-
+import Layout from "$lib/components/Layout.astro";
+import { commentKeys } from "$lib/comments/instagram.ts";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<script define:vars={{ commentKeys }} is:inline>
+  void (async () => {
+    const index = Math.floor(Math.random() * commentKeys.length);
+    const id = commentKeys[index];
+
+    const response = await fetch(`/r/${id}/`);
+    const html = await response.text();
+
+    const target = document.querySelector("#random-card");
+
+    if (target !== null) {
+      target.innerHTML = html;
+    }
+  })();
+</script>
+<Layout
+  title="comments.zone"
+  description="A collection of comments found on the internets."
+>
+  <div id="random-card"></div>
+</Layout>

@@ -1,0 +1,88 @@
+---
+import { getSeededAvatar, getSeededUsername } from "$lib/utils";
+import { getDistributedRandom } from "$lib/utils";
+import { Heart } from "@lucide/astro";
+
+interface Props {
+  userSeed: string;
+  content: string;
+}
+
+const { userSeed, content } = Astro.props;
+
+const username = getSeededUsername(userSeed);
+const avatar = getSeededAvatar(userSeed);
+const likesFormatter = new Intl.NumberFormat("en", {
+  notation: "compact",
+  compactDisplay: "short",
+});
+
+const numLikes = likesFormatter.format(
+  getDistributedRandom(userSeed, 250, 200000),
+);
+const weeksAge = getDistributedRandom(userSeed, 1, 150);
+
+interface TextSegment {
+  type: "text";
+  value: string;
+}
+
+interface MentionSegment {
+  type: "mention";
+  username: string;
+}
+
+type ContentSegment = TextSegment | MentionSegment;
+
+let userIndex = 1;
+
+const finalContent: ContentSegment[] = content
+  .split(/(@user)/g)
+  .filter((value) => value.length > 0)
+  .map((value): ContentSegment => {
+    if (value === "@user") {
+      return {
+        type: "mention",
+        username: getSeededUsername(userSeed, userIndex++),
+      };
+    }
+
+    return {
+      type: "text",
+      value,
+    };
+  });
+---
+
+<article class="flex max-w-5xl flex-row bg-ig-background p-16">
+  <img
+    src={avatar.toDataUri()}
+    alt={`Avatar for user ${userSeed}`}
+    class="mr-4 aspect-square h-16 w-16 rounded-full bg-ig-muted"
+  />
+  <div
+    class="mr-10 ml-4 flex flex-col gap-1 font-ig text-xl text-ig-foreground"
+  >
+    <div class="flex flex-row gap-2">
+      <span class="font-semibold">{username}</span><span
+        class="font-medium text-ig-muted">{weeksAge}w</span
+      >
+    </div>
+    <div class="font-normal">
+      {
+        finalContent.map((segment) =>
+          segment.type === "mention" ? (
+            <span class="text-blue-500">@{segment.username}</span>
+          ) : (
+            segment.value
+          ),
+        )
+      }
+    </div>
+    <div class="font-semibold text-ig-muted">Reply</div>
+  </div>
+  <div class="my-5 ml-10 flex flex-col gap-1 font-semibold text-ig-muted">
+    <Heart class="mx-auto" />
+    <span>{numLikes.toLowerCase()}</span>
+  </div>
+</article>

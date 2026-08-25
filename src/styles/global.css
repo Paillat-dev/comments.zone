@@ -1,0 +1,17 @@
+@import "@fontsource/roboto/400.css";
+@import "@fontsource/roboto/500.css";
+@import "@fontsource/roboto/600.css";
+@import "@fontsource/roboto/700.css";
+@import "@fontsource/noto-color-emoji/400.css";
+@import "tailwindcss";
+@theme {
+  --color-ig-background: #222328;
+  --color-ig-foreground: #f8f9f9;
+  --color-ig-muted: #b8b9bd;
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, "Noto Color Emoji",
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-ig:
+    "Roboto", ui-sans-serif, system-ui, sans-serif, "Noto Color Emoji",
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
