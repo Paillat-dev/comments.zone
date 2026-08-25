@@ -15,6 +15,7 @@ const {
   description = "A collection of comments found on the internets.",
   image,
 } = Astro.props;
+const noindex = Astro.url.pathname !== "/";
 const startYear = "2026";
 const currentYear = new Date().getFullYear().toString();
 ---
@@ -27,6 +28,7 @@ const currentYear = new Date().getFullYear().toString();
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

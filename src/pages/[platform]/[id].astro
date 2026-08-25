@@ -18,4 +18,5 @@ const { platform, comment } = Astro.props;
 const Comment = components[platform];
 ---
 
+<meta name="robots" content="noindex" />
 <Comment userSeed={comment.id.toString()} content={comment.content} />
