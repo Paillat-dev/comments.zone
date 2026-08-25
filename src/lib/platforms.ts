@@ -14,4 +14,30 @@ const platforms = {
 
 type PlatformKey = keyof typeof platforms;
 
-export { platforms, type Platform, type PlatformKey };
+interface CommentData {
+  id: number;
+  content: string;
+}
+
+interface CommentRouteProps {
+  platform: PlatformKey;
+  comment: CommentData;
+}
+
+function getCommentStaticPaths() {
+  return Object.entries(platforms).flatMap(([key, platform]) =>
+    platform.comments.map(([id, content]) => ({
+      params: {
+        platform: key,
+        id: id.toString(),
+      },
+      props: {
+        platform: key as PlatformKey,
+        comment: { id, content },
+      } satisfies CommentRouteProps,
+    })),
+  );
+}
+
+export { platforms, getCommentStaticPaths };
+export type { Platform, PlatformKey, CommentData, CommentRouteProps };

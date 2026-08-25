@@ -1,35 +1,18 @@
 ---
 import Instagram from "$lib/components/comments/Instagram.astro";
-import { platforms, type PlatformKey } from "$lib/platforms";
+import {
+  getCommentStaticPaths,
+  type CommentRouteProps,
+  type PlatformKey,
+} from "$lib/platforms";
 
 const components: Record<PlatformKey, typeof Instagram> = {
   i: Instagram,
 };
 
-interface CommentData {
-  id: number;
-  content: string;
-}
+type Props = CommentRouteProps;
 
-interface Props {
-  platform: PlatformKey;
-  comment: CommentData;
-}
-
-export function getStaticPaths() {
-  return Object.entries(platforms).flatMap(([key, platform]) =>
-    platform.comments.map(([id, content]) => ({
-      params: {
-        platform: key,
-        id: id.toString(),
-      },
-      props: {
-        platform: key as PlatformKey,
-        comment: { id, content },
-      },
-    })),
-  );
-}
+export const getStaticPaths = getCommentStaticPaths;
 
 const { platform, comment } = Astro.props;
 const Comment = components[platform];

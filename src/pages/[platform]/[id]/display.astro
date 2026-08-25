@@ -1,41 +1,36 @@
 ---
+import { getCommentStaticPaths } from "$lib/platforms";
+import type { CommentRouteProps, PlatformKey } from "$lib/platforms";
+import { getImage } from "astro:assets";
 import Layout from "$lib/components/Layout.astro";
 import Instagram from "$lib/components/comments/Instagram.astro";
-import { platforms, type PlatformKey } from "$lib/platforms";
+import { OG_WIDTH, OG_HEIGHT } from "$lib/og/instagram";
+
+export const getStaticPaths = getCommentStaticPaths;
+
+type Props = CommentRouteProps;
 
 const components: Record<PlatformKey, typeof Instagram> = {
   i: Instagram,
 };
 
-interface CommentData {
-  id: number;
-  content: string;
-}
+const { platform, comment }: Props = Astro.props;
 
-interface Props {
-  platform: PlatformKey;
-  comment: CommentData;
-}
+const ogImageAsset = await getImage({
+  src: `/${platform}/${comment.id}/og.png`,
+  width: OG_WIDTH,
+  height: OG_HEIGHT,
+  format: "png",
+});
 
-export function getStaticPaths() {
-  return Object.entries(platforms).flatMap(([key, platform]) =>
-    platform.comments.map(([id, content]) => ({
-      params: {
-        platform: key,
-        id: id.toString(),
-      },
-      props: {
-        platform: key as PlatformKey,
-        comment: { id, content },
-      },
-    })),
-  );
-}
+const ogImage = new URL(ogImageAsset.src, Astro.site ?? Astro.url);
 
-const { platform, comment } = Astro.props;
 const Comment = components[platform];
 ---
 
-<Layout title={`comments.zone | ${comment.id}`} description="">
+<Layout
+  title={`comments.zone | ${comment.id}`}
+  image={{ url: ogImage, width: OG_WIDTH, height: OG_HEIGHT }}
+>
   <Comment userSeed={comment.id.toString()} content={comment.content} />
 </Layout>

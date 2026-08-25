@@ -1,6 +1,5 @@
 ---
-import { getSeededAvatar, getSeededUsername } from "$lib/utils";
-import { getDistributedRandom } from "$lib/utils";
+import { getCommentDisplayData } from "$lib/comments/instagram";
 import { Heart } from "@lucide/astro";
 import { twMerge } from "tailwind-merge";
 
@@ -12,48 +11,8 @@ interface Props {
 
 const { userSeed, content, class: className } = Astro.props;
 
-const username = getSeededUsername(userSeed);
-const avatar = getSeededAvatar(userSeed);
-const likesFormatter = new Intl.NumberFormat("en", {
-  notation: "compact",
-  compactDisplay: "short",
-});
-
-const numLikes = likesFormatter.format(
-  getDistributedRandom(userSeed, 250, 200000),
-);
-const weeksAge = getDistributedRandom(userSeed, 1, 150);
-
-interface TextSegment {
-  type: "text";
-  value: string;
-}
-
-interface MentionSegment {
-  type: "mention";
-  username: string;
-}
-
-type ContentSegment = TextSegment | MentionSegment;
-
-let userIndex = 1;
-
-const finalContent: ContentSegment[] = content
-  .split(/(@user)/g)
-  .filter((value) => value.length > 0)
-  .map((value): ContentSegment => {
-    if (value === "@user") {
-      return {
-        type: "mention",
-        username: getSeededUsername(userSeed, userIndex++),
-      };
-    }
-
-    return {
-      type: "text",
-      value,
-    };
-  });
+const { username, avatar, numLikes, weeksAge, segments } =
+  getCommentDisplayData(userSeed, content);
 ---
 
 <article
@@ -74,7 +33,7 @@ const finalContent: ContentSegment[] = content
     </div>
     <div class="font-normal">
       {
-        finalContent.map((segment) =>
+        segments.map((segment) =>
           segment.type === "mention" ? (
             <span class="text-blue-500">@{segment.username}</span>
           ) : (
@@ -87,6 +46,6 @@ const finalContent: ContentSegment[] = content
   </div>
   <div class="my-5 ml-10 flex flex-col gap-1 font-semibold text-ig-muted">
     <Heart class="mx-auto" />
-    <span>{numLikes.toLowerCase()}</span>
+    <span>{numLikes}</span>
   </div>
 </article>
