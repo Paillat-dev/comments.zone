@@ -1,0 +1,39 @@
+name: Propose a new comment
+description: Suggest a comment to be added to comments.zone
+title: "[Comment]: "
+labels: ["new-comment"]
+body:
+  - type: textarea
+    id: comment-text
+    attributes:
+      label: Comment text
+      description: >-
+        The comment, verbatim. Keep the original spelling, punctuation,
+        emojis, and line breaks. Replace any @mentions of real users with
+        `@user`.
+      placeholder: Paste the exact comment text here...
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: >-
+        A screenshot of the original comment. Drag and drop or paste the
+        image into this field so it gets attached.
+      placeholder: Drag and drop or paste the screenshot here...
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: >-
+        Where the comment was found. YouTube and Reddit are not implemented
+        on the site yet, but proposals for them are welcome.
+      options:
+        - Instagram
+        - YouTube
+        - Reddit
+    validations:
+      required: true
