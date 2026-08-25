@@ -1,0 +1,41 @@
+---
+import Layout from "$lib/components/Layout.astro";
+import Instagram from "$lib/components/comments/Instagram.astro";
+import { platforms, type PlatformKey } from "$lib/platforms";
+
+const components: Record<PlatformKey, typeof Instagram> = {
+  i: Instagram,
+};
+
+interface CommentData {
+  id: number;
+  content: string;
+}
+
+interface Props {
+  platform: PlatformKey;
+  comment: CommentData;
+}
+
+export function getStaticPaths() {
+  return Object.entries(platforms).flatMap(([key, platform]) =>
+    platform.comments.map(([id, content]) => ({
+      params: {
+        platform: key,
+        id: id.toString(),
+      },
+      props: {
+        platform: key as PlatformKey,
+        comment: { id, content },
+      },
+    })),
+  );
+}
+
+const { platform, comment } = Astro.props;
+const Comment = components[platform];
+---
+
+<Layout title={`comments.zone | ${comment.id}`} description="">
+  <Comment userSeed={comment.id.toString()} content={comment.content} />
+</Layout>

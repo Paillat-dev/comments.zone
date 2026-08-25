@@ -3,9 +3,12 @@ import "../../styles/global.css";
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
 }
-const { title, description } = Astro.props;
+const {
+  title,
+  description = "A collection of comments found on the internets.",
+} = Astro.props;
 const startYear = "2026";
 const currentYear = new Date().getFullYear().toString();
 ---

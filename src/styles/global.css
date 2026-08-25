@@ -15,3 +15,11 @@
     "Roboto", ui-sans-serif, system-ui, sans-serif, "Noto Color Emoji",
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
+
+@layer base {
+  a {
+    color: revert;
+    text-decoration: revert;
+    cursor: revert;
+  }
+}

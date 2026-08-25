@@ -2,13 +2,15 @@
 import { getSeededAvatar, getSeededUsername } from "$lib/utils";
 import { getDistributedRandom } from "$lib/utils";
 import { Heart } from "@lucide/astro";
+import { twMerge } from "tailwind-merge";
 
 interface Props {
   userSeed: string;
   content: string;
+  class?: string;
 }
 
-const { userSeed, content } = Astro.props;
+const { userSeed, content, class: className } = Astro.props;
 
 const username = getSeededUsername(userSeed);
 const avatar = getSeededAvatar(userSeed);
@@ -54,7 +56,9 @@ const finalContent: ContentSegment[] = content
   });
 ---
 
-<article class="flex max-w-5xl flex-row bg-ig-background p-16">
+<article
+  class={twMerge("flex max-w-5xl flex-row bg-ig-background p-16", className)}
+>
   <img
     src={avatar.toDataUri()}
     alt={`Avatar for user ${userSeed}`}
